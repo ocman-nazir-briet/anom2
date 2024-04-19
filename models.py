@@ -14,7 +14,7 @@ class AppType(db.Model):
 class LogsData(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     data = db.Column(db.JSON)
-    date_created = db.Column(db.Date, default=datetime.now)
+    date_created = db.Column(db.DateTime, default=datetime.now)
 
     app_type_id = db.Column(db.Integer, db.ForeignKey('app_type.id'), nullable=False)
     app_type = db.relationship('AppType', backref=db.backref('logs_data', lazy=True))

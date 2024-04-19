@@ -20,7 +20,7 @@ def dropboxRulesTrigger(data):
     for rule in rules:
         check = str(rule.query_check)
         hours = rule.look_back
-        look_back = datetime.now() - timedelta(hours=0)
+        look_back = datetime.now() - timedelta(hours=hours)
 
         if check:
             if 'count' in check:
@@ -28,7 +28,7 @@ def dropboxRulesTrigger(data):
                     LogsData.query
                     .filter(func.json_extract_path_text(LogsData.data, 'actor', 'admin', 'email') == data['actor']['admin']['email'])
                     .filter(func.json_extract_path_text(LogsData.data, 'event_type', 'tag') == data['event_type']['tag'])
-                    # .filter(LogsData.date_created >= look_back)
+                    .filter(LogsData.date_created >= look_back)
                     .count()
                 )
                 data["count"] = count    
