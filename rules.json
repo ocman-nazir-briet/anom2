@@ -1,66 +1,61 @@
 {
     "rules": [
       {
-        "name": "Dropbox Admin Sign-in-as Session",
-        "conditions": {
-          "event_type": "sign_in_as_session_start",
-          "actor.team_member_id": "dbmid:AADQXRJkgb76NF2a5yGdAwkOV-t_IYp2exg"
-        },
-        "severity": "medium",
-        "threshold": 50
+        "severity_type":"medium",
+        "risk_score":"50",
+        "rule_name":"Dropbox Admin Sign-in-as Session",
+        "app_type":"dropbox",
+        "query_check":"data['event_type']['tag'] == 'sign_in_as_session_start'",
+        "look_back":3
       },
       {
-        "name": "Dropbox item shared externally",
-        "conditions": {
-          "event_type": "shared_content_add_member"
-        },
-        "severity": "medium",
-        "threshold": 50
+        "severity_type":"medium",
+        "risk_score":"50",
+        "rule_name":"Dropbox item shared externally",
+        "app_type":"dropbox",
+        "query_check":"data['event_type']['tag'] == 'shared_content_add_member'",
+        "look_back":3
       },
       {
-        "name": "Dropbox Linked Team Application Added",
-        "conditions": {
-          "event_type": ["app_link_team", "app_link_member"]
-        },
-        "severity": "low",
-        "threshold": 10
+        "severity_type":"low",
+        "risk_score":"10",
+        "rule_name":"Dropbox Linked Team Application Added",
+        "app_type":"dropbox",
+        "query_check":"data['event_type']['tag'] == 'app_link_team' or  data['event_type']['tag'] == 'app_link_member'",
+        "look_back":3
       },
       {
-        "name": "Dropbox Many Deletes",
-        "conditions": {
-          "event_category": "file_operations",
-          "event_type": "delete"
-        },
-        "severity": "medium",
-        "threshold": 50
+        "severity_type":"medium",
+        "risk_score":"50",
+        "rule_name":"Dropbox Many Deletes",
+        "app_type":"dropbox",
+        "query_check":"data['event_category']['tag'] == 'file_operations' and  data['event_type']['tag'] == 'delete' and data['count'] >= 3",
+        "look_back":3
       },
       {
-        "name": "Dropbox Many Downloads",
-        "conditions": {
-          "event_category": "file_operations",
-          "event_type": "download"
-        },
-        "severity": "medium",
-        "threshold": 50
+        "severity_type":"medium",
+        "risk_score":"50",
+        "rule_name":"Dropbox Many Downloads",
+        "app_type":"dropbox",
+        "query_check":"data['event_category']['tag'] == 'file_operations' and  data['event_type']['tag'] == 'download' and data['count'] >= 3",
+        "look_back":3
       },
       {
-        "name": "Dropbox Ownership Transfer",
-        "conditions": {
-          "event_category": "dropbox_ownership_transfer"
-        },
-        "severity": "high",
-        "threshold": 70
+        "severity_type":"high",
+        "risk_score":"70",
+        "rule_name":"Dropbox Ownership Transfer",
+        "app_type":"dropbox",
+        "query_check":"data['event_category']['tag'] == 'dropbox_ownership_transfer'",
+        "look_back":3
       },
       {
-        "name": "Dropbox User Disabled 2FA",
-        "conditions": {
-          "event_category": "tfa",
-          "event_type": "tfa_change_status",
-          "p_log_type": "Dropbox.TeamEvent"
-        },
-        "severity": "high",
-        "threshold": 70
-      }
+        "severity_type":"low",
+        "risk_score":"10",
+        "rule_name":"Dropbox User Disabled 2FA",
+        "app_type":"dropbox",
+        "query_check":"data['event_category']['tag'] == 'tfa' and data['event_type']['tag'] == 'tfa_change_status'",
+        "look_back":3
+      } 
     ]
   }
   
