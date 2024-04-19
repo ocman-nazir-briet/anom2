@@ -1,0 +1,66 @@
+{
+    "rules": [
+      {
+        "name": "Dropbox Admin Sign-in-as Session",
+        "conditions": {
+          "event_type": "sign_in_as_session_start",
+          "actor.team_member_id": "dbmid:AADQXRJkgb76NF2a5yGdAwkOV-t_IYp2exg"
+        },
+        "severity": "medium",
+        "threshold": 50
+      },
+      {
+        "name": "Dropbox item shared externally",
+        "conditions": {
+          "event_type": "shared_content_add_member"
+        },
+        "severity": "medium",
+        "threshold": 50
+      },
+      {
+        "name": "Dropbox Linked Team Application Added",
+        "conditions": {
+          "event_type": ["app_link_team", "app_link_member"]
+        },
+        "severity": "low",
+        "threshold": 10
+      },
+      {
+        "name": "Dropbox Many Deletes",
+        "conditions": {
+          "event_category": "file_operations",
+          "event_type": "delete"
+        },
+        "severity": "medium",
+        "threshold": 50
+      },
+      {
+        "name": "Dropbox Many Downloads",
+        "conditions": {
+          "event_category": "file_operations",
+          "event_type": "download"
+        },
+        "severity": "medium",
+        "threshold": 50
+      },
+      {
+        "name": "Dropbox Ownership Transfer",
+        "conditions": {
+          "event_category": "dropbox_ownership_transfer"
+        },
+        "severity": "high",
+        "threshold": 70
+      },
+      {
+        "name": "Dropbox User Disabled 2FA",
+        "conditions": {
+          "event_category": "tfa",
+          "event_type": "tfa_change_status",
+          "p_log_type": "Dropbox.TeamEvent"
+        },
+        "severity": "high",
+        "threshold": 70
+      }
+    ]
+  }
+  
