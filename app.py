@@ -8,9 +8,6 @@ from rules import dropboxRulesTrigger
 
 @app.route("/")
 def home():
-    rule = Rules.query.all()
-    for r in rule:
-        print(r.app_type)
     return "Hello World"
 
 
