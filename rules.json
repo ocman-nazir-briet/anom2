@@ -1,5 +1,5 @@
 {
-    "rules": [
+    "dropbox_rules": [
       {
         "severity_type":"medium",
         "risk_score":"50",
@@ -56,6 +56,89 @@
         "query_check":"data['event_category']['tag'] == 'tfa' and data['event_type']['tag'] == 'tfa_change_status'",
         "look_back":3
       } 
+    ],
+    "github":[
+      {
+        "severity_type":"medium",
+        "risk_score":"50",
+        "rule_name":"Github Delete Action Invoked",
+        "app_type":"github",
+        "query_check":"action in ('codespaces.delete', 'environment.delete', 'project.delete', 'repo.destroy')",
+        "look_back":3
+      },
+      {
+        "severity_type":"high",
+        "risk_score":"70",
+        "rule_name":"Github High Risk Configuration Disabled",
+        "app_type":"github",
+        "query_check":"action in ('org.advanced_security_policy_selected_member_disabled', 'org.disable_oauth_app_restrictions', 'org.disable_two_factor_requirement','repo.advanced_security_disabled')",
+        "look_back":3
+      },
+      {
+        "severity_type":"high",
+        "risk_score":"70",
+        "rule_name":"Outdated Dependency Or Vulnerability Alert Disabled",
+        "app_type":"github",
+        "query_check":"action in ('dependabot_alerts_new_repos.disable', 'dependabot_alerts.disable', 'dependabot_security_updates_new_repos.disable', 'dependabot_security_updates.disable', 'repository_vulnerability_alerts.disable')",
+        "look_back":3
+      },
+      {
+        "severity_type":"informal",
+        "risk_score":"0",
+        "rule_name":"New Github Organization Member Added",
+        "app_type":"github",
+        "query_check":"action in ('org.add_member', 'org.invite_member')",
+        "look_back":3
+      },
+      {
+        "severity_type":"low",
+        "risk_score":"10",
+        "rule_name":"Github New Secret Created",
+        "app_type":"github",
+        "query_check":"action in ('codespaces.create_an_org_secret', 'environment.create_actions_secret', 'org.create_actions_secret', 'repo.create_actions_secret')",
+        "look_back":3
+      },
+      {
+        "severity_type":"medium",
+        "risk_score":"50",
+        "rule_name":"Github Outside Collaborator Detected",
+        "app_type":"github",
+        "query_check":"action in ('org.remove_outside_collaborator', 'project.update_user_permission')",
+        "look_back":3
+      },
+      {
+        "severity_type":"low",
+        "risk_score":"0",
+        "rule_name":"Github Push Protection Bypass Detected",
+        "app_type":"github",
+        "query_check":"category == 'audit' and event.action | contains 'secret_scanning_push_protection.bypass'",
+        "look_back":3
+      },
+      {
+        "severity_type":"high",
+        "risk_score":"70",
+        "rule_name":"Github Push Protection Disabled",
+        "app_type":"github",
+        "query_check":"action in ('business_secret_scanning_custom_pattern_push_protection.disabled', 'business_secret_scanning_push_protection.disable', 'business_secret_scanning_push_protection.disabled_for_new_repos', 'org.secret_scanning_custom_pattern_push_protection_disabled', 'org.secret_scanning_push_protection_disable', 'org.secret_scanning_push_protection_new_repos_disable', 'repository_secret_scanning_custom_pattern_push_protection.disabled')",
+        "look_back":3
+      },
+      {
+        "severity_type":"high",
+        "risk_score":"70",
+        "rule_name":"Github Secret Scanning Feature Disabled",
+        "app_type":"github",
+        "query_check":"action in ('business_secret_scanning.disable', 'business_secret_scanning.disabled_for_new_repos', 'repository_secret_scanning.disable', 'secret_scanning.disable')",
+        "look_back":3
+      },
+      {
+        "severity_type":"low",
+        "risk_score":"10",
+        "rule_name":"Github Self Hosted Runner Changes Detected",
+        "app_type":"github",
+        "query_check":"action in ('org.remove_self_hosted_runner', 'org.runner_group_created', 'org.runner_group_removed', 'org.runner_group_runner_removed', 'org.runner_group_runners_added', 'org.runner_group_runners_updated', 'org.runner_group_updated', 'repo.register_self_hosted_runner', 'repo.remove_self_hosted_runner')",
+        "look_back":3
+      }
     ]
+
   }
   

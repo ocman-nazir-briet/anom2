@@ -9,4 +9,7 @@ def generateAlert(data, rule_id):
     db.session.commit()
 
 def sendAlert():
+    """
+    Will send alert to cytex
+    """
     pass

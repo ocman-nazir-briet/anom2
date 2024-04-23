@@ -45,7 +45,7 @@ class Rules(db.Model):
     severity_type = db.Column(db.String(255))
     risk_score = db.Column(db.Integer)
     rule_name = db.Column(db.String(255), unique=True)
-    query_check = db.Column(db.String(255))
+    query_check = db.Column(db.String(50000))
     look_back = db.Column(db.Integer)
     date_created = db.Column(db.DateTime, default=datetime.now)
 

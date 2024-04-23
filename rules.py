@@ -9,7 +9,7 @@ from datetime import datetime, timedelta
 
 
 
-
+# DropBox
 def dropboxRulesTrigger(data):
     alert_check = False
     rules = Rules.query.join(AppType).filter(AppType.name == "dropbox").all()
@@ -35,9 +35,6 @@ def dropboxRulesTrigger(data):
             if eval(check):
                 alert_check = True
                 generateAlert(data, rule.id)
-        
-
-    
 
     """
     Returning on the basis of anomly, if found then true and save that log to logsdata and vice versa 
@@ -47,4 +44,46 @@ def dropboxRulesTrigger(data):
     else:
         return False
 
+# GitHub
+def githubRulesTrigger(data):
+    alert_check = False
+    rules = Rules.query.join(AppType).filter(AppType.name == "github").all()
 
+    """
+    Here I'm using rules from database
+    """
+    for rule in rules:
+        check = str(rule.query_check)
+        if eval(check):
+            alert_check = True
+            generateAlert(data, rule.id)
+
+    """
+    Returning on the basis of anomly, if found then true and save that log to logsdata and vice versa 
+    """
+    if alert_check==True:
+        return True
+    else:
+        return False
+
+# Azure
+def azureRulesTrigger(data):
+    alert_check = False
+    rules = Rules.query.join(AppType).filter(AppType.name == "azure").all()
+
+    """
+    Here I'm using rules from database
+    """
+    for rule in rules:
+        check = str(rule.query_check)
+        if eval(check):
+            alert_check = True
+            generateAlert(data, rule.id)
+
+    """
+    Returning on the basis of anomly, if found then true and save that log to logsdata and vice versa 
+    """
+    if alert_check==True:
+        return True
+    else:
+        return False

@@ -3,7 +3,7 @@ from flask import Flask, request, jsonify
 from models import AppType, LogsData, Rules
 from config import app, db
 from datetime import datetime
-from rules import dropboxRulesTrigger
+from rules import azureRulesTrigger, dropboxRulesTrigger, githubRulesTrigger
 
 
 @app.route("/")
@@ -54,6 +54,64 @@ def dropbox():
             Here checking for the anomly in ingested logs data, if found then we will save that log in db and generate an alert for it.
             """
             alert = dropboxRulesTrigger(data)
+            print("Anomly Found? ",alert)
+            if type:
+                logs_data = LogsData(
+                    data=data, app_type=type, date_created=datetime.now())
+                db.session.add(logs_data)
+                db.session.commit()
+                return jsonify({'message': 'Data added successfully.'}), 200
+            else:
+                return jsonify({'error': 'AppType with name "dropbox" does not exist.'}), 404
+
+        except Exception as e:
+            print(str(e))
+            db.session.rollback()
+            return jsonify({'error': 'An error occurred while adding data to the LogsData table.'}), 500
+    else:
+        return jsonify({'message': 'Only POST requests are allowed.'}), 405
+
+
+@app.route("/github", methods=['GET', 'POST'])
+def github():
+    if request.method == "POST":
+        try:
+            data = request.json
+            type = AppType.query.filter_by(name='github').first()
+            
+            """
+            Here checking for the anomly in ingested logs data, if found then we will save that log in db and generate an alert for it.
+            """
+            alert = githubRulesTrigger(data)
+            print("Anomly Found? ",alert)
+            if type:
+                logs_data = LogsData(
+                    data=data, app_type=type, date_created=datetime.now())
+                db.session.add(logs_data)
+                db.session.commit()
+                return jsonify({'message': 'Data added successfully.'}), 200
+            else:
+                return jsonify({'error': 'AppType with name "dropbox" does not exist.'}), 404
+
+        except Exception as e:
+            print(str(e))
+            db.session.rollback()
+            return jsonify({'error': 'An error occurred while adding data to the LogsData table.'}), 500
+    else:
+        return jsonify({'message': 'Only POST requests are allowed.'}), 405
+
+
+@app.route("/azure", methods=['GET', 'POST'])
+def azure():
+    if request.method == "POST":
+        try:
+            data = request.json
+            type = AppType.query.filter_by(name='azure').first()
+            
+            """
+            Here checking for the anomly in ingested logs data, if found then we will save that log in db and generate an alert for it.
+            """
+            alert = azureRulesTrigger(data)
             print("Anomly Found? ",alert)
             if type:
                 logs_data = LogsData(
