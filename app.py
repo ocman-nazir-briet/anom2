@@ -1,6 +1,6 @@
 import os
 from flask import Flask, request, jsonify
-from models import AppType, LogsData, Rules
+from models import AppType, LogsData, Rules, Alert
 from config import app, db
 from datetime import datetime
 from rules import rulesTrigger
@@ -134,3 +134,101 @@ def addData():
 #         return jsonify({'message': 'Only POST requests are allowed.'}), 405
 
 
+# list of rules
+@app.route("/list-rules", methods=["GET"])
+def list_rules():
+    # need to add is active
+    rules = Rules.query.filter_by(is_active=True).all()
+
+    rules_list = []
+    for rule in rules:
+        rule_data = {
+            'id': rule.id,
+            'severity_type': rule.severity_type,
+            'risk_score': rule.risk_score,
+            'rule_name': rule.rule_name,
+            'query_check': rule.query_check,
+            'look_back': rule.look_back,
+            'date_created': rule.date_created.strftime('%Y-%m-%d %H:%M:%S'),
+            'app_type_id': rule.app_type_id
+        }
+        rules_list.append(rule_data)
+
+    return jsonify({"rules": rules_list})
+
+
+# single rule
+@app.route("/rule/<int:rule_id>", methods=["GET"])
+def get_rule(rule_id):
+    rule = Rules.query.get(rule_id)
+
+    if rule and rule.is_active:
+        rule_data = {
+            'id': rule.id,
+            'severity_type': rule.severity_type,
+            'risk_score': rule.risk_score,
+            'rule_name': rule.rule_name,
+            'query_check': rule.query_check,
+            'look_back': rule.look_back,
+            'date_created': rule.date_created.strftime('%Y-%m-%d %H:%M:%S'),
+            'app_type_id': rule.app_type_id
+        }
+
+        return jsonify(rule_data), 200
+    else:
+        return jsonify({'error': 'Rule not found or not active'}), 404
+
+
+# post api for alert ret of specific app
+@app.route("/alerts", methods=["POST"])
+def get_alerts_by_app_type():
+    request_data = request.get_json()
+    app_type_id = request_data.get('app_type_id')
+
+    if app_type_id is None:
+        return jsonify({'error': 'app_type_id is required in the request body'}), 400
+
+    alerts = Alert.query.filter_by(app_type_id=app_type_id).all()
+
+    if alerts:
+        alert_list = []
+        for alert in alerts:
+            alert_data = {
+                'id': alert.id,
+                'data': alert.data,
+                'is_active': alert.is_active,
+                'date_created': alert.date_created.strftime('%Y-%m-%d %H:%M:%S'),
+                'rule_id': alert.rule_id
+            }
+            alert_list.append(alert_data)
+
+        return jsonify({"alerts": alert_list}), 200
+    else:
+        return jsonify({'error': 'No alerts found for the given app type'}), 404
+
+
+# post api for log ret of specific app
+@app.route("/logs-data", methods=["POST"])
+def get_logs_data_by_app_type():
+    request_data = request.get_json()
+    app_type_id = request_data.get('app_type_id')
+
+    if app_type_id is None:
+        return jsonify({'error': 'app_type_id is required in the request body'}), 400
+
+    logs_data = LogsData.query.filter_by(app_type_id=app_type_id).all()
+
+    if logs_data:
+        logs_data_list = []
+        for log_data in logs_data:
+            log_data_dict = {
+                'id': log_data.id,
+                'data': log_data.data,
+                'date_created': log_data.date_created.strftime('%Y-%m-%d %H:%M:%S'),
+                'app_type_id': log_data.app_type_id
+            }
+            logs_data_list.append(log_data_dict)
+
+        return jsonify({"logs_data": logs_data_list}), 200
+    else:
+        return jsonify({'error': 'No logs data found for the given app type'}), 404
